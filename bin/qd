@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# quick create pagelet or vue project page directory
 
 function display_help() {
 	cat <<-EOF
