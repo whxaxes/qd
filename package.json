@@ -1,0 +1,10 @@
+{
+  "name": "quick-dir",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "qd": "./bin/qd"
+  },
+  "author": "wanghx",
+  "license": "MIT"
+}

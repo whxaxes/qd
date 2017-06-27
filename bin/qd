@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# quick create pagelet or vue project page directory
+
+function display_help() {
+	cat <<-EOF
+  Usage: qd [Options] [args]
+  Options:
+    -f, --force       Force create dir
+    -v, --vue         Create vue dir
+    -p, --pagelet     Create pagelet dir
+    -s, --simple      Don't import scss file
+    -h, --help        Display help information
+    -n                Use same name file name
+	EOF
+}
+
+# create pagelet dir
+function cpagelet() {
+	echo -e "'use strict';\n\nclass App {\n  constructor(config) {\n    this.init(config);\n    this.bind();\n  }\n\n  init(config) {\n  }\n\n  bind() {\n  }\n}\n\nmodule.exports = config => new App(config);" > $1/$2.js
+	echo -e "<div class=\"$2\">\n\n</div>\n\n{% script %}\nrequire(\"./$2\")()\n{% endscript %}" > $1/$2.tpl
+	if test $3 != 'true'; then
+		echo -e ".$2 {\n\n}" > $1/$2.scss
+	fi
+}
+
+# create vue dir
+function cvue() {
+	import_css=""
+	filename="index"
+
+  # use same name filename
+	if test $4 = 'true'; then
+		filename=$2
+	fi
+
+	# check whether import scss
+	if test $3 != 'true'; then
+		import_css="@import './$filename.scss';"
+		echo -e ".$2 {\n\n}" > $1/$filename.scss
+	fi
+
+	html="<template>\n  <div class=\"$2\">\n    \n  </div>\n</template>"
+	js="<script type=\"text/babel\">\n  import vm from './vm';\n  export default vm;\n</script>"
+	css="<style lang=\"scss\" rel=\"stylesheet/scss\">\n  $import_css \n</style>"
+
+	echo -e "export default {\n  name: '$2',\n  data() {\n    return {\n    };\n  },\n  methods: {\n  },\n};" > $1/vm.js
+	echo -e "$html\n\n$js\n\n$css" > $1/$filename.vue
+}
+
+use_force=false
+is_vue=false
+is_pagelet=false
+is_simple=false
+dir_name=
+same_name_require=false
+
+if test $# -eq 0; then
+	display_help
+	exit
+else
+	while test $# -ne 0; do
+		case $1 in
+			-f|--force) use_force=true;;
+			-v|--vue) is_vue=true;;
+			-p|--pagelet) is_pagelet=true;;
+			-s|--simple) is_simple=true;;
+			-h|--help) display_help;exit;;
+			-n) same_name_require=true;;
+			*) dir_name=$1;;
+		esac
+		shift
+	done
+fi
+
+# check whether directory already exists
+if test -d $dir_name; then
+	if $use_force = true; then
+		rm -rf $dir_name
+	else
+		read -p 'Directory already exists, delete it anyway? [y/n](y)' answer
+		case ${answer:-y} in
+			Y|y) rm -rf $dir_name;;
+			*) exit ;;
+		esac
+	fi
+fi
+
+# check type of directory
+if [ $is_vue = false ]&&[ $is_pagelet = false ]; then
+	read -p 'Vue or pagelet? [v/p](v)' answer
+	case ${answer:-v} in
+		V|v) is_vue=true;;
+		P|p) is_pagelet=true;;
+		*) echo 'unknown type'; exit;;
+	esac
+fi
+
+# create directory
+mkdir $dir_name
+if $is_vue = true; then
+	cvue $dir_name ${dir_name##*/} $is_simple $same_name_require
+elif $is_pagelet = true; then
+	cpagelet $dir_name ${dir_name##*/} $is_simple
+fi
