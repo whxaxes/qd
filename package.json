@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/whxaxes/qd.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "bugs": {
     "url": "https://github.com/whxaxes/qd/issues"
   },
