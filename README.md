@@ -1,4 +1,4 @@
-# Quick create pagelet or vue project page directory
+# Create pagelet or vue project page directory quickly
 
 ## Install
 
