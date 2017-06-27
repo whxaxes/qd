@@ -1,10 +1,18 @@
 {
   "name": "quick-dir",
   "version": "1.0.0",
-  "description": "",
+  "description": "Quick create pagelet or vue project page directory",
   "bin": {
     "qd": "./bin/qd"
   },
   "author": "wanghx",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whxaxes/qd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/whxaxes/qd/issues"
+  },
+  "homepage": "https://github.com/whxaxes/qd#readme"
 }
