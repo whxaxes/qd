@@ -76,7 +76,7 @@ if test -d $dir_name; then
 	if $use_force = true; then
 		rm -rf $dir_name
 	else
-		read -p 'Directory already exists, delete it anyway? [y/n](y)' answer
+		read -p "Directory already exists, delete it? [y/n](y)" answer
 		case ${answer:-y} in
 			Y|y) rm -rf $dir_name;;
 			*) exit ;;
@@ -86,11 +86,20 @@ fi
 
 # check type of directory
 if [ $is_vue = false ]&&[ $is_pagelet = false ]; then
-	read -p 'Vue or pagelet? [v/p](v)' answer
+	read -p "Vue or pagelet? [v/p](v)" answer
 	case ${answer:-v} in
 		V|v) is_vue=true;;
 		P|p) is_pagelet=true;;
 		*) echo 'unknown type'; exit;;
+	esac
+fi
+
+# check whether need scss
+if [ $is_simple = false ]; then
+	read -p "Do you need scss? [y/n](y)" answer
+	case ${answer:-y} in
+		Y|y) is_simple=false;;
+		*) is_simple=true;;
 	esac
 fi
 
